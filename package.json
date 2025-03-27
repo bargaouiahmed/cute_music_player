@@ -1,0 +1,53 @@
+{
+  "name": "cute-music-player",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && cross-env NODE_ENV=development electron .\"",
+    "build": "vite build",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:build": "vite build && electron-builder build --win"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "fs": "^0.0.1-security",
+    "howler": "^2.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^8.2.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "vite": "^5.1.4",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.gift.musicplayer",
+    "productName": "Cute Music Player",
+    "copyright": "A gift of love",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "src/assets/icon.png"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "src/assets",
+        "to": "assets"
+      }
+    ],
+    "asar": false
+  }
+}
