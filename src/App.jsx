@@ -5,7 +5,8 @@ import CloseButton from "./components/CloseButton";
 import UploadSong from "./components/UploadSong";
 import SongSelection from "./components/SongSelection";
 import "./App.css";
-
+import Ytb2MP3 from "./components/Ytb2MP3";
+import ManualPlay from "./components/ManualPlay";
 function App() {
   const [paused, setPaused] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -206,17 +207,24 @@ const onclose=()=>{
       {isDeleting &&
 
       <SongSelection songs={songs} setSongs={setSongs} onclose={onclose} />}
+      <ManualPlay songs={songs} audio={audio} getSafeUrl={getSafeUrl} paused={paused}/>
+    <Ytb2MP3 />
+
       <UploadSong onUploadComplete={handleNewSongUploaded} /></div>
-      <img src={frontImage} style={{ zIndex: "1",
-        position:"static"
+      <img src={frontImage} style={{ zIndex: "-1",
+        position:"relative"
        }} alt="" />
       <div className="music-control" style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
         gap: "10px",
-        marginTop: "10px"
+        marginTop:"0px",
+        position:"absolute",
+        top:"450px",
+        left:"120px",
+
+        zIndex:"1"
       }}>
         <PauseButton onClick={togglePlayPause} paused={paused} />
 

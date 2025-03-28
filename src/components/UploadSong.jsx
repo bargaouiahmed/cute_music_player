@@ -43,7 +43,7 @@ export default function UploadSong() {
             </button>
 
             {toggled && (
-                <div className="file-input-wrapper">
+                <div  className="file-input-wrapper">
                     <label htmlFor="file-upload-button" className="custom-file-label">
                         {songName || "Choose file"}
                     </label>

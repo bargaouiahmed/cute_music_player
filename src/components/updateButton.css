@@ -1,7 +1,8 @@
 /* Container styles */
 .upload-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
     gap: 12px;
     margin-bottom: 15px;
@@ -30,6 +31,7 @@
 .file-input-wrapper {
     display: flex;
     align-items: center;
+    flex-direction: column;
     gap: 10px;
 }
 
