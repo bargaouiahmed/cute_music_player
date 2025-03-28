@@ -57,7 +57,10 @@ try {
     deleteSong: (filePath) => ipcRenderer.invoke("delete-song", filePath),
 
       // ... other exports
-      getFileUrl: (path) => ipcRenderer.invoke('get-file-url', path)
+      getFileUrl: (path) => ipcRenderer.invoke('get-file-url', path),
+      downloadFile: async (url ,fileName)=>{
+        return await ipcRenderer.invoke('download-mp3', {url, fileName});
+      }
     });  ;
 } catch (error) {
   console.error('Electron context bridge failed:', error);

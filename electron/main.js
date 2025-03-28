@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, protocol } from 'electron';
+import { app, BrowserWindow, ipcMain, protocol,net } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -107,7 +107,64 @@ ipcMain.handle("delete-song", async (_, filePath) => {
     return false;
   }
 });
+ipcMain.handle("download-mp3", async (_, { url, fileName }) => {
+  try {
+    ensureAssetsDir();
+    const assetsPath = getAssetsPath();
 
+    // Sanitize the filename to remove any invalid characters
+    const sanitizedFileName = fileName
+      .replace(/[^a-z0-9._ -]/gi, '_') // Replace special chars
+      .trim()
+      .replace(/\s+/g, '_') + '.mp3'; // Ensure .mp3 extension
+
+    const destPath = path.join(assetsPath, sanitizedFileName);
+
+    console.log(`Downloading MP3 from ${url} to ${destPath}`);
+
+    return new Promise((resolve, reject) => {
+      const request = net.request(url);
+      const fileStream = fs.createWriteStream(destPath);
+
+      request.on('response', (response) => {
+        // Check if response is successful
+        if (response.statusCode !== 200) {
+          reject(new Error(`HTTP ${response.statusCode}`));
+          return;
+        }
+
+        response.pipe(fileStream);
+
+        fileStream.on('finish', () => {
+          fileStream.close();
+          resolve({
+            success: true,
+            filePath: `file://${destPath}`,
+            fileName: sanitizedFileName
+          });
+        });
+      });
+
+      request.on('error', (err) => {
+        // Delete partially downloaded file if error occurs
+        fs.unlink(destPath, () => {});
+        reject(err);
+      });
+
+      fileStream.on('error', (err) => {
+        reject(err);
+      });
+
+      request.end();
+    });
+  } catch (error) {
+    console.error("Error downloading mp3:", error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+});
 // App lifecycle
 app.whenReady().then(() => {
   protocol.registerFileProtocol('file', (request, callback) => {
